@@ -10,6 +10,7 @@ import {
   arrayify,
   createAttr,
   createMetadata,
+  createSnsLambdaEvent,
   createSnsTopicEvent,
   parseMessageAttributes,
   parseAttributes,
@@ -375,7 +376,17 @@ export class SNSServer implements ISNSServer {
           }
           if (protocol === "sqs") {
             return this.publishSqs(
-              event,
+              JSON.stringify(
+                createSnsLambdaEvent(
+                  topicArn,
+                  sub.SubscriptionArn,
+                  subject,
+                  message,
+                  messageId,
+                  messageAttributes,
+                  messageGroupId
+                )
+              ),
               sub,
               messageAttributes,
               messageGroupId
